@@ -4,10 +4,10 @@ import assert from 'assert'
 import {createAction, handleActions} from 'redux-actions'
 import debug from 'debug'
 import _ from 'lodash'
-import auth from '../auth-config'
 import isAuthorized from './is-authorized'
+import auth from '.'
 
-const dbg = debug('app:get-auth-redux')
+const dbg = debug('lib:auth:get-auth-redux')
 
 const LOGIN_BEGIN = 'auth/login-begin'
 const LOGIN = 'auth/login'
@@ -19,7 +19,7 @@ const loginBegin = createAction(LOGIN_BEGIN)
 const logoutBegin = createAction(LOGOUT_BEGIN)
 
 export default function({postAuthLocation, impl}) {
-  dbg('default')
+  dbg('auth=%o', auth)
   return {
     scopeClaim: impl.scopeClaim,
     scopePath: `session.token.decoded.${impl.scopeClaim}`,
