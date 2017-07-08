@@ -1,11 +1,11 @@
 # react-redux-auth
 
-authentication and authorization strategy for react, redux and react-router 4.x
+authentication and authorization for react, redux and react-router 4.x
 
 [![Build Status](https://travis-ci.org/tony-kerz/react-redux-auth.svg?branch=master)](https://travis-ci.org/tony-kerz/react-redux-auth)
 [![XO code style](https://img.shields.io/badge/code_style-XO-5ed9c7.svg)](https://github.com/sindresorhus/xo)
 
-> see [tests](test) for examples
+> see [tests](test) for examples (to-do)
 
 ## usage
 
@@ -64,10 +64,6 @@ authentication and authorization strategy for react, redux and react-router 4.x
     })
     ```
 > curently only `auth0` identity provider supported, but others may be added
-
-<!-- -->
-
-> see tests (to-do)
 
 ## development
 
