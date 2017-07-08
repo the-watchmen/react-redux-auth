@@ -3,7 +3,7 @@ import minimatch from 'minimatch'
 import _ from 'lodash'
 import debug from 'debug'
 
-const dbg = debug('app:auth:is-authorized')
+const dbg = debug('lib:auth:is-authorized')
 
 export default function({path, rules, scope, resolvedRoutes}) {
   dbg('args=%o', arguments[0])

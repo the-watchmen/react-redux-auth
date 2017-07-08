@@ -5,11 +5,9 @@ import {connect} from 'react-redux'
 import PropTypes from 'prop-types'
 import {bindActionCreators} from 'redux'
 import {withRouter} from 'react-router-dom'
-import auth from '../auth-config'
+import auth from '.'
 
-const dbg = debug('app:auth-container')
-
-const {actions} = auth
+const dbg = debug('lib:auth:auth-container')
 
 class AuthContainer extends Component {
   render() {
@@ -22,10 +20,10 @@ class AuthContainer extends Component {
   }
 
   componentWillMount() {
-    dbg('cwm: props=%o, auth=%o', this.props, auth)
+    dbg('cwm: props=%o, auth=%o', this.props)
+    const {notAuthorizedLocation, onNotAuthorized} = auth
     const {login, history, resolveRoute} = this.props
     const {pathname} = history.location
-    const {notAuthorizedLocation} = auth
     const isAuthorized = resolveRoute(pathname)
     dbg('is-authorized=%o', isAuthorized)
     if (_.isUndefined(isAuthorized)) {
@@ -41,13 +39,15 @@ class AuthContainer extends Component {
       history.push(notAuthorizedLocation)
       if (_.isBoolean(isAuthorized)) {
         dbg('not authorized after authentication')
-        auth.onNotAuthorized && auth.onNotAuthorized({path: pathname})
+        onNotAuthorized && onNotAuthorized({path: pathname})
       }
     }
   }
 
   static propTypes = {
+    children: PropTypes.element.isRequired,
     login: PropTypes.func.isRequired,
+    resolveRoute: PropTypes.func.isRequired,
     history: PropTypes.shape({
       push: PropTypes.func.isRequired
     }).isRequired
@@ -57,13 +57,14 @@ class AuthContainer extends Component {
 export default withRouter(
   connect(
     state => {
-      dbg('connect: state=%o', state)
+      dbg('connect: state=%o, auth=%o', state, auth)
       return {
         scope: _.get(state, auth.scopePath),
         resolvedRoutes: _.get(state, 'session.resolvedRoutes')
       }
     },
     dispatch => {
+      const {actions} = auth
       dbg('connect: actions=%o', actions)
       return bindActionCreators(actions, dispatch)
     }

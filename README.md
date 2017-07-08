@@ -9,58 +9,65 @@ authentication and authorization strategy for react, redux and react-router 4.x
 
 ## usage
 
-1. `npm install {this repo}`
+1. `yarn add {this repo}`
 
 ## sample configuration
 
-```
-import debug from 'debug'
-import {toastr} from 'react-redux-toastr'
-import {getAuthRedux, getAuthAuth0} from 'react-redux-auth'
+1. in main entry point (e.g. `app/index.js`)
+    ```
+    //...
+    // this import should happen as early as possible for timing
+    import './auth-config'
+    //...
+    ```
+1. `./auth-config.js`
+    ```
+    import {toastr} from 'react-redux-toastr'
+    import {configure} from './auth'
 
-const dbg = debug('app:auth-config')
-
-export default {
-  ...getAuthRedux({
-    postAuthLocation: ({token}) => {
-      // can customize with function (e.g. based on roles)
-      dbg('post-auth-location: token=%o', token)
-      return 'stuff'
-    },
-    // put stuff that varies across env in config...
-    impl: getAuthAuth0({
-      clientId: 'client-id-123',
-      domain: 'my-domain.auth0.com',
-      returnTo: 'http://localhost:8080',
-      options: {
-        theme: {
-          logo: 'https://my-logos/my-logo.png'
+    configure({
+      impl: {
+        provider: 'auth0',
+        options: {
+          clientId: '3IM9Zk9sCMKTJokbo92bamt83R-tS9vT',
+          domain: 'kerzilla.auth0.com',
+          returnTo: 'http://localhost:8080',
+          options: {
+            theme: {
+              logo: 'https://vignette4.wikia.nocookie.net/batman/images/7/74/BrokenBat.png'
+            },
+            languageDictionary: {
+              title: 'kerzsoft'
+            },
+            allowSignUp: false
+          }
+        }
+      },
+      // roles can be a string, an array (or'd), or a function for custom
+      rules: [
+        {
+          path: '/stuff',
+          roles: roles => {
+            return roles.includes('stuff')
+          }
         },
-        languageDictionary: {
-          title: 'my-title'
-        },
-        allowSignUp: false
+        {path: '/nonsense', roles: 'nonsense'}
+      ],
+      postAuthLocation: ({token}) => {
+        // can customize with function (e.g. based on roles)
+        return 'stuff'
+      },
+      notAuthorizedLocation: '/',
+      onNotAuthorized: ({path}) => {
+        toastr.success('not authorized', `unable to visit route ${path}`)
       }
     })
-  }),
-  // roles can be a string, an array (or'd), or a function for custom
-  rules: [
-    {
-      path: '/stuff',
-      roles: roles => {
-        return roles.includes('stuff')
-      }
-    },
-    {path: '/nonsense', roles: 'nonsense'}
-  ],
-  notAuthorizedLocation: '/',
-  onNotAuthorized: ({path}) => {
-    toastr.success('not authorized', `unable to visit route ${path}`)
-  }
-}
-```
+    ```
+> curently only `auth0` identity provider supported, but others may be added
 
-> see tests
+<!-- -->
+
+> see tests (to-do)
 
 ## development
 

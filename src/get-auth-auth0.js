@@ -3,7 +3,7 @@ import debug from 'debug'
 import jwtDecode from 'jwt-decode'
 import Auth0Lock from 'auth0-lock'
 
-const dbg = debug('app:auth:get-auth-auth0')
+const dbg = debug('lib:auth:get-auth-auth0')
 
 export default function({clientId, domain, options, returnTo}) {
   const lock = new Auth0Lock(clientId, domain, {...options, auth: {redirect: false}})

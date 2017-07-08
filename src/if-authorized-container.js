@@ -5,11 +5,9 @@ import {connect} from 'react-redux'
 import {withRouter} from 'react-router-dom'
 import {bindActionCreators} from 'redux'
 import PropTypes from 'prop-types'
-import auth from '../auth-config'
+import auth from '.'
 
-const dbg = debug('app:auth:if-authorized-container')
-
-const {actions} = auth
+const dbg = debug('lib:auth:if-authorized-container')
 
 class IfAuthorizedContainer extends Component {
   componentWillMount() {
@@ -29,6 +27,9 @@ class IfAuthorizedContainer extends Component {
   getPath = () => this.props.children.props[this.props.path]
 
   static propTypes = {
+    path: PropTypes.string.isRequired,
+    resolveRoute: PropTypes.func.isRequired,
+    resolvedRoutes: PropTypes.object.isRequired,
     children: PropTypes.element.isRequired
   }
 }
@@ -45,6 +46,7 @@ export default withRouter(
       }
     },
     dispatch => {
+      const {actions} = auth
       dbg('connect: actions=%o', actions)
       return bindActionCreators(actions, dispatch)
     }
