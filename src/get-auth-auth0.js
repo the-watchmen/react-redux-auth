@@ -5,7 +5,14 @@ import Auth0Lock from 'auth0-lock'
 
 const dbg = debug('lib:auth:get-auth-auth0')
 
-export default function({clientId, domain, options, returnTo}) {
+export default function({
+  clientId,
+  domain,
+  options,
+  returnTo,
+  scopeClaim = 'http://auth0/scope',
+  scopeDelimiter
+}) {
   const lock = new Auth0Lock(clientId, domain, {...options, auth: {redirect: false}})
 
   return {
@@ -26,6 +33,7 @@ export default function({clientId, domain, options, returnTo}) {
     logout: async () => {
       lock.logout({returnTo})
     },
-    scopeClaim: 'http://auth0/scope'
+    scopeClaim,
+    scopeDelimiter
   }
 }

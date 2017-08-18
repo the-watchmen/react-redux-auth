@@ -1,6 +1,5 @@
 // see: https://github.com/erikras/ducks-modular-redux
 //
-import assert from 'assert'
 import {createAction, handleActions} from 'redux-actions'
 import debug from 'debug'
 import _ from 'lodash'
@@ -18,18 +17,30 @@ const RESOLVE_ROUTE = 'auth/resolve-route'
 const loginBegin = createAction(LOGIN_BEGIN)
 const logoutBegin = createAction(LOGOUT_BEGIN)
 
-export default function({postAuthLocation, impl}) {
-  dbg('auth=%o', auth)
+function parseScope({scope, scopeDelimiter}) {
+  dbg('parse-scope: args=%o', arguments[0])
+  return scope ? scope.split(scopeDelimiter) : []
+}
+
+export default function({postAuthLocation, impl, onNotAuthorized}) {
+  dbg('args=%o, auth=%o', arguments[0], auth)
+  const scopeClaim = impl.scopeClaim || 'scope'
+  const scopeDelimiter = impl.scopeDelimiter || ' '
+  const scopePath = `session.token.decoded.${scopeClaim}`
+
   return {
-    scopeClaim: impl.scopeClaim,
-    scopePath: `session.token.decoded.${impl.scopeClaim}`,
+    scopePath,
     actions: {
       login: ({history, target} = {}) => {
         dbg('login-action: history=%o, target=%o', history, target)
         return async (dispatch, getState) => {
           dbg('login-thunk')
           dispatch(loginBegin(target))
+          dbg('login-thunk: before await impl.login()...')
           const loginResult = await impl.login()
+          // const loginResult = impl.login()
+          dbg('login-thunk: after await impl.login(), login-result=%o', loginResult)
+          // await loginResult
           const {decoded} = loginResult
           let _target
           if (target) {
@@ -47,8 +58,7 @@ export default function({postAuthLocation, impl}) {
           const {location} = history
           dbg('post-login: decoded=%o, location=%o, target=%o', decoded, location, _target)
           // apply authentication scope to resolved-routes...
-          const scope = decoded[impl.scopeClaim]
-          assert(scope, 'scope required')
+          const scope = parseScope({scope: decoded[scopeClaim], scopeDelimiter})
           const {rules} = auth
           let {resolvedRoutes} = getState().session
           resolvedRoutes = _.transform(resolvedRoutes, (result, val, key) => {
@@ -76,10 +86,18 @@ export default function({postAuthLocation, impl}) {
           dbg('resolve-route-thunk: path=%o', path)
           const state = getState()
           const {resolvedRoutes} = state.session
-          const scope = _.get(state, auth.scopePath)
+          const scope = parseScope({scope: _.get(state, scopePath), scopeDelimiter})
           const result = isAuthorized({path, rules: auth.rules, scope, resolvedRoutes})
           dispatch(createAction(RESOLVE_ROUTE)({[path]: result}))
           return result
+        }
+      },
+      onNotAuthorized: path => {
+        dbg('on-not-authorized-action: path=%o', path)
+        return (dispatch, getState) => {
+          dbg('on-not-authorized-thunk: path=%o', path)
+          dbg('on-not-authorized-thunk: dispatch=%o, getState=%o', dispatch, getState)
+          onNotAuthorized({path, dispatch})
         }
       }
     },

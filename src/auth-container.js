@@ -20,9 +20,9 @@ class AuthContainer extends Component {
   }
 
   componentWillMount() {
-    dbg('cwm: props=%o, auth=%o', this.props)
-    const {notAuthorizedLocation, onNotAuthorized} = auth
-    const {login, history, resolveRoute} = this.props
+    dbg('cwm: props=%o, auth=%o', this.props, auth)
+    const {notAuthorizedLocation} = auth
+    const {login, history, resolveRoute, onNotAuthorized} = this.props
     const {pathname} = history.location
     const isAuthorized = resolveRoute(pathname)
     dbg('is-authorized=%o', isAuthorized)
@@ -35,11 +35,15 @@ class AuthContainer extends Component {
     // 1) stay put if at a location per history, or
     // 2) re-route to notAuthorizedLocation
     if (!isAuthorized) {
-      dbg('not-authorized: not-authorized-location=%o, pathname=%o', notAuthorizedLocation, pathname)
+      dbg(
+        'not-authorized: not-authorized-location=%o, pathname=%o',
+        notAuthorizedLocation,
+        pathname
+      )
       history.push(notAuthorizedLocation)
       if (_.isBoolean(isAuthorized)) {
         dbg('not authorized after authentication')
-        onNotAuthorized && onNotAuthorized({path: pathname})
+        onNotAuthorized && onNotAuthorized(pathname)
       }
     }
   }
@@ -48,6 +52,7 @@ class AuthContainer extends Component {
     children: PropTypes.element.isRequired,
     login: PropTypes.func.isRequired,
     resolveRoute: PropTypes.func.isRequired,
+    onNotAuthorized: PropTypes.func.isRequired,
     history: PropTypes.shape({
       push: PropTypes.func.isRequired
     }).isRequired

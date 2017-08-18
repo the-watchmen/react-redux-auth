@@ -27,13 +27,12 @@ export default function({path, rules, scope, resolvedRoutes}) {
       dbg('matched=%o, auth required...', path)
       dbg('scope=%o', scope)
 
-      const tokenRoles = scope.split(' ')
       if (_.isString(roles)) {
-        result = tokenRoles.includes(roles)
+        result = scope.includes(roles)
       } else if (_.isArray(roles)) {
-        result = _.some(roles, role => tokenRoles.includes(role))
+        result = _.some(roles, role => scope.includes(role))
       } else if (_.isFunction(roles)) {
-        result = roles(tokenRoles)
+        result = roles(scope)
       } else {
         throw new TypeError(`unexpected roles type=${roles}`)
       }
