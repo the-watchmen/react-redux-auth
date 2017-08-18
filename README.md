@@ -23,8 +23,9 @@ authentication and authorization for react, redux and react-router 4.x
 1. `./auth-config.js`
 
     1. [auth0](https://auth0.com/): [example](example/auth-config.auth0.js)
-    1. [azure](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-authentication-scenarios) : [example](example/auth-config.azure.js)
-    1. [hello.js](https://adodson.com/hello.js/): [example](example/auth-config.hello.js)
+    1. [hello.js](https://adodson.com/hello.js/)
+        1. [azure](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-authentication-scenarios): [example](example/auth-config.hello.azure.js)
+        1. [node-oidc-provider](https://github.com/panva/node-oidc-provider): [example](example/auth-config.hello.oidc.js)
 
 ## development
 
