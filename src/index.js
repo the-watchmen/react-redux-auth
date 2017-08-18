@@ -5,6 +5,10 @@ import getAuthRedux from './get-auth-redux'
 
 export AuthContainer from './auth-container'
 export IfAuthorizedContainer from './if-authorized-container'
+export getAuth0Auth from './get-auth-auth0.js'
+export getHelloAuth from './get-auth-hello.js'
+export getAzureHelloProvider from './hello/azure.js'
+export getOidcHelloProvider from './hello/oidc.js'
 
 const dbg = debug('lib:auth')
 

@@ -21,49 +21,10 @@ authentication and authorization for react, redux and react-router 4.x
     //...
     ```
 1. `./auth-config.js`
-    ```
-    import {toastr} from 'react-redux-toastr'
-    import {configure} from './auth'
 
-    configure({
-      impl: {
-        provider: 'auth0',
-        options: {
-          clientId: '3IM9Zk9sCMKTJokbo92bamt83R-tS9vT',
-          domain: 'kerzilla.auth0.com',
-          returnTo: 'http://localhost:8080',
-          options: {
-            theme: {
-              logo: 'https://vignette4.wikia.nocookie.net/batman/images/7/74/BrokenBat.png'
-            },
-            languageDictionary: {
-              title: 'kerzsoft'
-            },
-            allowSignUp: false
-          }
-        }
-      },
-      // roles can be a string, an array (or'd), or a function for custom
-      rules: [
-        {
-          path: '/stuff',
-          roles: roles => {
-            return roles.includes('stuff')
-          }
-        },
-        {path: '/nonsense', roles: 'nonsense'}
-      ],
-      postAuthLocation: ({token}) => {
-        // can customize with function (e.g. based on roles)
-        return 'stuff'
-      },
-      notAuthorizedLocation: '/',
-      onNotAuthorized: ({path}) => {
-        toastr.success('not authorized', `unable to visit route ${path}`)
-      }
-    })
-    ```
-> curently only `auth0` identity provider supported, but others may be added
+    1. [auth0](https://auth0.com/): [example](example/auth-config.auth0.js)
+    1. [azure](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-authentication-scenarios) : [example](example/auth-config.azure.js)
+    1. [hello.js](https://adodson.com/hello.js/): [example](example/auth-config.hello.js)
 
 ## development
 
