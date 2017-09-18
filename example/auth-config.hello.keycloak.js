@@ -8,10 +8,10 @@ const dbg = debug('app:auth-config')
 configure({
   impl: getAuth({
     url: config.auth.url,
-    domain: 'domain-1',
+    domain: 'realm-1',
     clientId: 'client-1',
     redirectUri: config.auth.redirect,
-    getProvider: helloProviders.oidc
+    getProvider: helloProviders.keycloak
   }),
   // roles can be a string, an array (or'd), or a function for custom
   rules: [
@@ -30,5 +30,5 @@ configure({
   },
   notAuthorizedLocation: '/',
   // onFailure should be function that takes argument containing error string
-  onFailure: openSnackbar
+  onNotAuthorized: openSnackbar
 })

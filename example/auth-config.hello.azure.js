@@ -1,19 +1,17 @@
 import debug from 'debug'
-import {
-  configure,
-  getHelloAuth as getAuth,
-  getAzureHelloProvider as getProvider
-} from 'react-redux-auth'
+import config from 'config'
+import {configure, getAuthHello as getAuth, helloProviders} from 'react-redux-auth'
 import {openSnackbar} from './layout/layout-redux'
 
 const dbg = debug('app:auth-config')
 
 configure({
   impl: getAuth({
-    clientId: '2feff992-96e6-4420-86a4-1e25348a6d09',
+    url: config.auth.url,
     domain: 'anthonykerzgmail.onmicrosoft.com',
-    returnTo: 'http://localhost:8080/',
-    getProvider
+    clientId: '2feff992-96e6-4420-86a4-1e25348a6d09',
+    redirectUri: config.auth.redirect,
+    getProvider: helloProviders.azure
   }),
   // roles can be a string, an array (or'd), or a function for custom
   rules: [
@@ -31,8 +29,6 @@ configure({
     return 'stuff'
   },
   notAuthorizedLocation: '/',
-  onNotAuthorized: ({path, dispatch}) => {
-    dbg('on-not-authorized: unable to visit route=%o, dispatch=%o', path, dispatch)
-    dispatch(openSnackbar(`not authorized: unable to visit route ${path}`))
-  }
+  // onFailure should be function that takes argument containing error string
+  onFailure: openSnackbar
 })
