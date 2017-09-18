@@ -29,6 +29,7 @@ authentication and authorization for react, redux and react-router 4.x
         1. [azure](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-authentication-scenarios): [example](example/auth-config.hello.azure.js)
         1. [node-oidc-provider](https://github.com/panva/node-oidc-provider): [example](example/auth-config.hello.oidc.js)
         1. [keycloak](http://www.keycloak.org/): [example](example/auth-config.hello.keycloak.js)
+          1. [configuration notes](keycloak.md) 
 
 ## development
 
