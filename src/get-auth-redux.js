@@ -19,7 +19,7 @@ function parseScope({token}) {
   return token.scope ? token.scope.split(' ') : []
 }
 
-export default function({postAuthLocation, impl, onFailure}) {
+export default function({postAuthLocation, impl, onLogin, onLogout, onFailure}) {
   dbg('args=%o, auth=%o', arguments[0], auth)
 
   return {
@@ -59,6 +59,7 @@ export default function({postAuthLocation, impl, onFailure}) {
                 if (_target != location) {
                   history.push(_target)
                 }
+                onLogin && onLogin({token: result})
               },
               onFailure: result => {
                 dbg('login: on-failure: result=%o, dispatch=%o', result, dispatch)
@@ -79,6 +80,7 @@ export default function({postAuthLocation, impl, onFailure}) {
             onSuccess: () => {
               dbg('logout: on-success: auth=%o', auth)
               history.push(auth.notAuthorizedLocation)
+              onLogout && onLogout()
             }
           }
         }
