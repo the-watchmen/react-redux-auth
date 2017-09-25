@@ -2,11 +2,18 @@ import assert from 'assert'
 import minimatch from 'minimatch'
 import _ from 'lodash'
 import debug from 'debug'
+import config from 'config'
 
 const dbg = debug('lib:auth:is-authorized')
 
 export default function({path, rules, scope, resolvedRoutes}) {
   dbg('args=%o', arguments[0])
+
+  if (_.get(config, 'auth.force')) {
+    dbg('warning: auth.force set, returning true (should only happen during development)')
+    return true
+  }
+
   if (!scope) {
     dbg('no scope, returning undefined...')
     return undefined
