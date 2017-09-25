@@ -24,7 +24,8 @@ export default function({url, clientId, domain, redirectUri, getProvider, parseS
     login: async () => {
       try {
         dbg('login: calling hello.login()')
-        const auth = await hello(providerKey).login({redirect_uri: redirectUri, force: true})
+        // {force: true}?
+        const auth = await hello(providerKey).login({redirect_uri: redirectUri})
         dbg('login: after await: auth=%o', auth)
         // const encoded = _.get(auth, 'authResponse.access_token')
         const encoded = _.get(auth, 'authResponse.id_token')
