@@ -1,12 +1,8 @@
 {
-  "name": "react-redux-auth",
-  "version": "0.2.2",
+  "name": "@watchmen/react-redux-auth",
+  "version": "0.5.2",
   "description": "",
   "main": "dist/index.js",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/tony-kerz/react-redux-auth.git"
-  },
   "scripts": {
     "xo": "xo",
     "build": "babel ./src -d ./dist"
@@ -14,8 +10,9 @@
   "author": "tony kerz",
   "license": "ISC",
   "dependencies": {
-    "auth0-lock": "^10.18.0",
+    "config": "^1.26.2",
     "debug": "^2.6.1",
+    "helpr": "^0.16.4",
     "jwt-decode": "^2.2.0",
     "lodash": "^4.17.4",
     "minimatch": "^3.0.4",
@@ -24,7 +21,8 @@
     "react-redux": "^5.0.5",
     "react-router-dom": "^4.1.1",
     "redux": "^3.7.1",
-    "redux-actions": "^2.2.1"
+    "redux-actions": "^2.2.1",
+    "redux-pack": "^0.1.5"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -41,5 +39,10 @@
   "xo": {
     "extends": "xo-react",
     "useEslintrc": true
+  },
+  "optionalDependencies": {
+    "auth0-lock": "^10.20.0",
+    "hellojs": "^1.15.1",
+    "keycloak-js": "^3.3.0-cr.2"
   }
 }

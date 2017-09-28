@@ -1,6 +1,9 @@
 import debug from 'debug'
+import {configure} from 'react-redux-auth'
+import getAuth from 'react-redux-auth/src/get-auth-hello'
+import getProvider from 'react-redux-auth/src/hello/keycloak'
 import config from 'config'
-import {configure, getHelloAuth as getAuth, helloProviders} from 'react-redux-auth'
+import {axios} from 'web-helpr'
 import {openSnackbar} from './layout/layout-redux'
 
 const dbg = debug('app:auth-config')
@@ -8,20 +11,24 @@ const dbg = debug('app:auth-config')
 configure({
   impl: getAuth({
     url: config.auth.url,
-    domain: 'domain-1',
+    domain: 'realm-1',
     clientId: 'client-1',
     redirectUri: config.auth.redirect,
-    getProvider: helloProviders.oidc
+    getProvider
   }),
   // roles can be a string, an array (or'd), or a function for custom
   rules: [
     {
       path: '/stuff',
       roles: roles => {
-        return roles.includes('admin')
+        return roles.includes('group-1')
       }
     },
-    {path: '/nonsense', roles: 'nonsense'}
+    {
+      path: '/such',
+      roles: ['group-1']
+    },
+    {path: '/nonsense', roles: 'group-1'}
   ],
   postAuthLocation: ({token}) => {
     // can customize with function (e.g. based on roles)
@@ -29,6 +36,7 @@ configure({
     return 'stuff'
   },
   notAuthorizedLocation: '/',
-  // onFailure should be function that takes argument containing error string
-  onFailure: openSnackbar
+  onFailure: openSnackbar,
+  onLogin: result => axios.setToken(result.token.encoded),
+  onLogout: axios.unsetToken
 })

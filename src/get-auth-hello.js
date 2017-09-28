@@ -8,13 +8,13 @@ const dbg = debug('lib:auth:get-auth-hello')
 
 const providerKey = 'provider'
 
-export default function({clientId, domain, returnTo, getProvider, scopeClaim, scopeDelimiter}) {
+export default function({url, clientId, domain, redirectUri, getProvider, parseScope}) {
   dbg('args=%o', arguments[0])
 
-  const provider = getProvider({domain, returnTo})
+  const provider = getProvider({url, domain, redirectUri})
   dbg('provider=%o', provider)
 
-  hello.init({[providerKey]: provider})
+  hello.init({[providerKey]: provider.options})
 
   hello.init({
     [providerKey]: clientId
@@ -24,7 +24,8 @@ export default function({clientId, domain, returnTo, getProvider, scopeClaim, sc
     login: async () => {
       try {
         dbg('login: calling hello.login()')
-        const auth = await hello(providerKey).login({redirect_uri: returnTo, force: true})
+        // {force: true}?
+        const auth = await hello(providerKey).login({redirect_uri: redirectUri})
         dbg('login: after await: auth=%o', auth)
         // const encoded = _.get(auth, 'authResponse.access_token')
         const encoded = _.get(auth, 'authResponse.id_token')
@@ -39,9 +40,9 @@ export default function({clientId, domain, returnTo, getProvider, scopeClaim, sc
     },
     logout: async () => {
       hello(providerKey).logout(providerKey, {force: true})
-      // redirect here? ref to history?
     },
-    scopeClaim,
-    scopeDelimiter
+    parseError: provider.parseError,
+    parseScope: parseScope || provider.parseScope,
+    redirectUri
   }
 }

@@ -9,7 +9,7 @@ export default function({
   clientId,
   domain,
   options,
-  returnTo,
+  redirectUri,
   scopeClaim = 'http://auth0/scope',
   scopeDelimiter
 }) {
@@ -31,7 +31,7 @@ export default function({
       })
     },
     logout: async () => {
-      lock.logout({returnTo})
+      lock.logout({redirectUri})
     },
     scopeClaim,
     scopeDelimiter

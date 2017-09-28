@@ -1,5 +1,6 @@
 import debug from 'debug'
-import {configure, getAuth0 as getAuth} from 'react-redux-auth'
+import config from 'config'
+import {configure, getAuthAuth0 as getAuth} from 'react-redux-auth'
 import {openSnackbar} from './layout/layout-redux'
 
 const dbg = debug('app:auth-config')
@@ -8,7 +9,7 @@ configure({
   impl: getAuth({
     clientId: '3IM9Zk9sCMKTJokbo92bamt83R-tS9vT',
     domain: 'kerzilla.auth0.com',
-    returnTo: 'http://localhost:8080',
+    returnTo: config.auth.redirect,
     options: {
       theme: {
         logo: 'https://vignette4.wikia.nocookie.net/batman/images/7/74/BrokenBat.png'
@@ -35,8 +36,6 @@ configure({
     return 'stuff'
   },
   notAuthorizedLocation: '/',
-  onNotAuthorized: ({path, dispatch}) => {
-    dbg('on-not-authorized: unable to visit route=%o, dispatch=%o', path, dispatch)
-    dispatch(openSnackbar(`not authorized: unable to visit route ${path}`))
-  }
+  // onFailure should be function that takes argument containing error string
+  onFailure: openSnackbar
 })
