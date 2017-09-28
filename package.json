@@ -1,7 +1,10 @@
 {
   "name": "@watchmen/react-redux-auth",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "",
+  "publishConfig": {
+    "access": "public"
+  },
   "main": "dist/index.js",
   "scripts": {
     "xo": "xo",
