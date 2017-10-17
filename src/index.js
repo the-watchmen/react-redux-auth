@@ -3,8 +3,9 @@ import _ from 'lodash'
 import debug from 'debug'
 import getAuthRedux from './get-auth-redux'
 
-export AuthContainer from './auth-container'
-export IfAuthorizedContainer from './if-authorized-container'
+export {default as AuthContainer} from './auth-container'
+export {default as IfAuthorizedContainer} from './if-authorized-container'
+export {default as AuthenticatedRoute} from './authenticated-route'
 
 const dbg = debug('lib:auth')
 

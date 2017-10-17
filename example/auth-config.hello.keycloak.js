@@ -1,9 +1,9 @@
 import debug from 'debug'
-import {configure} from 'react-redux-auth'
-import getAuth from 'react-redux-auth/src/get-auth-hello'
-import getProvider from 'react-redux-auth/src/hello/keycloak'
 import config from 'config'
-import {axios} from 'web-helpr'
+import {configure} from '@watchmen/react-redux-auth'
+import getAuth from '@watchmen/react-redux-auth/src/get-auth-hello'
+import getProvider from '@watchmen/react-redux-auth/src/hello/keycloak'
+import {axios} from '@watchmen/web-helpr'
 import {openSnackbar} from './layout/layout-redux'
 
 const dbg = debug('app:auth-config')

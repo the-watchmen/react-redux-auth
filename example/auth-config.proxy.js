@@ -1,8 +1,6 @@
 import debug from 'debug'
-import config from 'config'
 import {configure} from '@watchmen/react-redux-auth'
-import getAuth from '@watchmen/react-redux-auth/src/get-auth-hello'
-import getProvider from '@watchmen/react-redux-auth/src/hello/azure'
+import getAuth from '@watchmen/react-redux-auth/src/get-auth-proxy'
 import {axios} from '@watchmen/web-helpr'
 import {openSnackbar} from './layout/layout-redux'
 
@@ -10,11 +8,10 @@ const dbg = debug('app:auth-config')
 
 configure({
   impl: getAuth({
-    url: config.auth.url,
-    domain: 'anthonykerzgmail.onmicrosoft.com',
-    clientId: '2feff992-96e6-4420-86a4-1e25348a6d09',
-    redirectUri: config.auth.redirect,
-    getProvider
+    parseScope: ({token}) => {
+      dbg('parse-scope: token=%o', token)
+      return token.groups || []
+    }
   }),
   // roles can be a string, an array (or'd), or a function for custom
   rules: [

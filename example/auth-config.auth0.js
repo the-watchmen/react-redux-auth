@@ -1,6 +1,8 @@
 import debug from 'debug'
 import config from 'config'
-import {configure, getAuthAuth0 as getAuth} from 'react-redux-auth'
+import {configure} from '@watchmen/react-redux-auth'
+import getAuth from '@watchmen/react-redux-auth/src/get-auth-auth0'
+import {axios} from '@watchmen/web-helpr'
 import {openSnackbar} from './layout/layout-redux'
 
 const dbg = debug('app:auth-config')
@@ -37,5 +39,7 @@ configure({
   },
   notAuthorizedLocation: '/',
   // onFailure should be function that takes argument containing error string
-  onFailure: openSnackbar
+  onFailure: openSnackbar,
+  onLogin: result => axios.setToken(result.token.encoded),
+  onLogout: axios.unsetToken
 })
