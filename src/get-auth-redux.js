@@ -24,13 +24,14 @@ export default function({postAuthLocation, impl, onLogin, onLogout, onFailure}) 
 
   return {
     actions: {
-      login: ({history, target}) => {
-        dbg('login-action: history=%o, target=%o', history, target)
+      // allow passing token here for server-side-proxy case...
+      login: ({history, target, token}) => {
+        dbg('login-action: history=%o, target=%o, token=%o', history, target, token)
         return dispatch => {
           dbg('login-action-thunk: dispatch=%o', dispatch)
           dispatch({
             type: LOGIN,
-            promise: impl.login(),
+            promise: impl.login({token}),
             meta: {
               onSuccess: result => {
                 dbg('login: on-success: result=%o', result)
