@@ -12,11 +12,7 @@ const dbg = debug('lib:auth:auth-container')
 class AuthContainer extends Component {
   render() {
     dbg('render: props=%o', this.props)
-    return (
-      <div>
-        {this.props.children}
-      </div>
-    )
+    return <div>{this.props.children}</div>
   }
 
   componentWillMount() {
