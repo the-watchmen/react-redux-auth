@@ -3,7 +3,7 @@
 import {createAction, handleActions} from 'redux-actions'
 import {handle} from 'redux-pack'
 import debug from 'debug'
-import {stringify} from 'helpr'
+import {stringify} from '@watchmen/helpr'
 import _ from 'lodash'
 import isAuthorized from './is-authorized'
 import auth from '.'
@@ -60,13 +60,13 @@ export default function({postAuthLocation, impl, onLogin, onLogout, onFailure}) 
                 if (_target != location) {
                   history.push(_target)
                 }
-                onLogin && onLogin({token: result})
+                onLogin && onLogin({result, dispatch})
               },
               onFailure: result => {
                 dbg('login: on-failure: result=%o, dispatch=%o', result, dispatch)
                 const {parseError} = impl
                 const message = parseError ? parseError(result) : stringify(result)
-                dispatch(onFailure(message))
+                onFailure && onFailure({message, dispatch})
               }
             }
           })
@@ -74,14 +74,17 @@ export default function({postAuthLocation, impl, onLogin, onLogout, onFailure}) 
       },
       logout: ({history}) => {
         dbg('logout-action: history=%o', history)
-        return {
-          type: LOGOUT,
-          promise: impl.logout(),
-          meta: {
-            onSuccess: () => {
-              dbg('logout: on-success: auth=%o', auth)
-              history.push(auth.notAuthorizedLocation)
-              onLogout && onLogout()
+        return dispatch => {
+          dbg('logout-thunk: history=%o', history)
+          return {
+            type: LOGOUT,
+            promise: impl.logout(),
+            meta: {
+              onSuccess: () => {
+                dbg('logout: on-success: auth=%o', auth)
+                history.push(auth.notAuthorizedLocation)
+                onLogout && onLogout({dispatch})
+              }
             }
           }
         }

@@ -1,5 +1,5 @@
 import debug from 'debug'
-import {stringify} from 'helpr'
+import {stringify} from '@watchmen/helpr'
 
 const dbg = debug('lib:auth:hello:keycloak')
 
