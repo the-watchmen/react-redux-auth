@@ -39,7 +39,7 @@ configure({
   },
   notAuthorizedLocation: '/',
   // onFailure should be function that takes argument containing error string
-  onFailure: openSnackbar,
+  onFailure: ({message, dispatch}) => dispatch(openSnackbar(message)),
   onLogin: result => axios.setToken(result.token.encoded),
   onLogout: axios.unsetToken
 })
