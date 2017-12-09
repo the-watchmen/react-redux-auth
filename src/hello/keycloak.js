@@ -4,6 +4,7 @@ import {stringify} from '@watchmen/helpr'
 const dbg = debug('lib:auth:hello:keycloak')
 
 export default function({url, domain, redirectUri}) {
+  dbg('url=%o, domain=%o, redirectUri=%o', url, domain, redirectUri)
   return {
     parseError: ({error}) => {
       if (error.error_description) {
@@ -33,8 +34,9 @@ export default function({url, domain, redirectUri}) {
         p.qs.nonce = new Date().getTime()
       },
       logout: p => {
-        dbg('logout: p=%o', p)
-        return `${url}/auth/realms/${domain}/protocol/openid-connect/logout?redirect_uri=${redirectUri}/`
+        const logoutUrl = `${url}/auth/realms/${domain}/protocol/openid-connect/logout?redirect_uri=${redirectUri}/`
+        dbg('logout: p=%o, url=%o', p, logoutUrl)
+        return logoutUrl
       },
       refresh: true,
       base: ''

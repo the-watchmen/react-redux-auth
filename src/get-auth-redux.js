@@ -76,17 +76,24 @@ export default function({postAuthLocation, impl, onLogin, onLogout, onFailure}) 
         dbg('logout-action: history=%o', history)
         return dispatch => {
           dbg('logout-thunk: history=%o', history)
-          return {
+          dispatch({
             type: LOGOUT,
             promise: impl.logout(),
             meta: {
               onSuccess: () => {
+                //
+                // impl.logout() could involve redirects
+                // causing a page refresh, so this code here
+                // (including any onLogout action provided)
+                // should prolly be concerned with things other than local state
+                // which would be reset (e.g. could send out a remote call if required)
+                //
                 dbg('logout: on-success: auth=%o', auth)
                 history.push(auth.notAuthorizedLocation)
                 onLogout && onLogout({dispatch})
               }
             }
-          }
+          })
         }
       },
       resolveRoute: path => {
