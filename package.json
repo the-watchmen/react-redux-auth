@@ -14,7 +14,7 @@
   "author": "tony kerz",
   "license": "ISC",
   "dependencies": {
-    "@watchmen/helpr": "^1.0.5",
+    "@watchmen/helpr": "^1.0.6",
     "config": "^1.28.1",
     "debug": "^3.1.0",
     "jwt-decode": "^2.2.0",
@@ -53,6 +53,6 @@
   "optionalDependencies": {
     "auth0-lock": "^10.24.1",
     "hellojs": "^1.16.1",
-    "keycloak-js": "^3.4.1-cr.1"
+    "keycloak-js": "^3.4.1"
   }
 }
