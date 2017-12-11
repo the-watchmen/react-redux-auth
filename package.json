@@ -14,7 +14,7 @@
   "author": "tony kerz",
   "license": "ISC",
   "dependencies": {
-    "@watchmen/helpr": "^1.0.6",
+    "@watchmen/helpr": "^1.0.8",
     "config": "^1.28.1",
     "debug": "^3.1.0",
     "jwt-decode": "^2.2.0",
