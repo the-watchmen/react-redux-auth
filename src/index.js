@@ -14,7 +14,7 @@ const auth = {}
 export function configure(config) {
   dbg('configure: config=%o', config)
   assert(config, 'config required')
-  const {postAuthLocation, impl, onFailure, onLogin, onLogout} = config
+  const {postAuthLocation, impl, onFailure, onLogin, onLogout, parseScopeHook} = config
   const picked = _.pick(config, ['rules', 'notAuthorizedLocation'])
 
   Object.assign(auth, {
@@ -23,7 +23,8 @@ export function configure(config) {
       impl,
       onLogin,
       onFailure,
-      onLogout
+      onLogout,
+      parseScopeHook
     }),
     ...picked
   })

@@ -19,7 +19,7 @@ function parseScope({token}) {
   return token.scope ? token.scope.split(' ') : []
 }
 
-export default function({postAuthLocation, impl, onLogin, onLogout, onFailure}) {
+export default function({postAuthLocation, impl, onLogin, onLogout, onFailure, parseScopeHook}) {
   dbg('args=%o, auth=%o', arguments[0], auth)
 
   return {
@@ -124,12 +124,12 @@ export default function({postAuthLocation, impl, onLogin, onLogout, onFailure}) 
               active: true,
               target: action.payload
             }),
-            success: () => {
+            success: async () => {
               dbg('login-success: state=%o, action=%o', state, action)
               const token = action.payload
               const {decoded} = token
-              const _parseScope = impl.parseScope || parseScope
-              const scope = _parseScope({token: decoded})
+              const _parseScope = parseScopeHook || impl.parseScope || parseScope
+              const scope = await _parseScope({token: decoded})
               const {rules} = auth
               let {resolvedRoutes} = state
               resolvedRoutes = _.transform(resolvedRoutes, (result, val, key) => {
