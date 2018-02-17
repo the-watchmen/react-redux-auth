@@ -8,10 +8,19 @@ const dbg = debug('lib:auth:get-auth-proxy')
 // but client receives notification of authentication with jwt and can configure client accordingly
 //
 
-export default function({parseScope}) {
-  dbg('parse-scope=%o', arguments[0])
+export default function({url, redirectUri, parseScope}) {
+  dbg('args=%o', arguments[0])
+  assert(url, 'url required')
+  assert(redirectUri, 'redirect-uri required')
 
   return {
+    // to-do: this will get called on not-authorized,
+    // but this implementation expects token to be resolved already
+    // so it won't reroute to login url.
+    // need to refine to support a two-phase approach where login will redirect
+    // and a post-login triggered by redirect from idp ->
+    // authenticated-route will process the token
+    //
     login: async ({token}) => {
       try {
         dbg('login: token=%o', token)
@@ -26,8 +35,11 @@ export default function({parseScope}) {
       }
     },
     logout: async () => {
-      throw new Error('logout not implemented')
+      // throw new Error('logout not implemented')
+      // eslint-disable-next-line no-undef
+      window.location = `${url}/logout?redirectUri=${redirectUri}`
     },
-    parseScope
+    parseScope,
+    url
   }
 }

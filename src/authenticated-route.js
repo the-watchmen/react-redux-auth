@@ -4,7 +4,7 @@ import debug from 'debug'
 import {connect} from 'react-redux'
 import {bindActionCreators} from 'redux'
 import {withRouter} from 'react-router-dom'
-import auth from './index'
+import auth from '.'
 
 const dbg = debug('lib:react-redux-auth:authenticated-route')
 

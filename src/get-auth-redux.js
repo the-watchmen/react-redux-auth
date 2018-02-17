@@ -13,13 +13,14 @@ const dbg = debug('lib:auth:get-auth-redux')
 const LOGIN = 'auth/login'
 const LOGOUT = 'auth/logout'
 const RESOLVE_ROUTE = 'auth/resolve-route'
+const SET_ROLES = 'auth/set-roles'
 
 function parseScope({token}) {
   dbg('parse-scope: token=%o', token)
   return token.scope ? token.scope.split(' ') : []
 }
 
-export default function({postAuthLocation, impl, onLogin, onLogout, onFailure, parseScopeHook}) {
+export default function({postAuthLocation, impl, onLogin, onLogout, onFailure}) {
   dbg('args=%o, auth=%o', arguments[0], auth)
 
   return {
@@ -107,6 +108,22 @@ export default function({postAuthLocation, impl, onLogin, onLogout, onFailure, p
           return result
         }
       },
+      setRoles: roles => {
+        dbg('set-roles: roles=%o', roles)
+        return dispatch => {
+          dbg('set-roles-thunk: roles=%o', roles)
+          dispatch({
+            type: SET_ROLES,
+            promise: roles,
+            meta: {
+              onSuccess: result => {
+                dbg('set-roles: on-success: result=%o', result)
+              }
+            }
+          })
+        }
+      },
+      // to-do: determine if this can be simplified (called from auth-container)
       onFailure: message => {
         dbg('on-failure-action: message=%o', message)
         return dispatch => {
@@ -124,18 +141,13 @@ export default function({postAuthLocation, impl, onLogin, onLogout, onFailure, p
               active: true,
               target: action.payload
             }),
-            success: async () => {
+            success: () => {
               dbg('login-success: state=%o, action=%o', state, action)
               const token = action.payload
               const {decoded} = token
-              const _parseScope = parseScopeHook || impl.parseScope || parseScope
-              const scope = await _parseScope({token: decoded})
-              const {rules} = auth
-              let {resolvedRoutes} = state
-              resolvedRoutes = _.transform(resolvedRoutes, (result, val, key) => {
-                result[key] = isAuthorized({path: key, rules, scope, resolvedRoutes})
-              })
-              dbg('resolved-routes=%o', resolvedRoutes)
+              const _parseScope = impl.parseScope || parseScope
+              const scope = _parseScope({token: decoded})
+              const resolvedRoutes = resolveRoutes({state, scope})
               return {
                 ...state,
                 token,
@@ -174,6 +186,16 @@ export default function({postAuthLocation, impl, onLogin, onLogout, onFailure, p
             ...state,
             resolvedRoutes: {...state.resolvedRoutes, ...action.payload}
           }
+        },
+        [SET_ROLES]: (state, action) => {
+          dbg('reducer: set-roles: state=%o, action=%o', state, action)
+          const scope = action.payload
+          const resolvedRoutes = resolveRoutes({state, scope})
+          return {
+            ...state,
+            resolvedRoutes,
+            scope
+          }
         }
       },
       {
@@ -186,4 +208,15 @@ export default function({postAuthLocation, impl, onLogin, onLogout, onFailure, p
       }
     )
   }
+}
+
+function resolveRoutes({state, scope}) {
+  const {rules} = auth
+  let {resolvedRoutes} = state
+  dbg('resolve-routes: pre=%o', resolvedRoutes)
+  resolvedRoutes = _.transform(resolvedRoutes, (result, val, key) => {
+    result[key] = isAuthorized({path: key, rules, scope, resolvedRoutes})
+  })
+  dbg('resolve-routes: post=%o', resolvedRoutes)
+  return resolvedRoutes
 }
