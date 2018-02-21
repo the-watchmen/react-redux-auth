@@ -1,6 +1,6 @@
 {
   "name": "@watchmen/react-redux-auth",
-  "version": "2.3.0",
+  "version": "2.3.2",
   "description": "",
   "publishConfig": {
     "access": "public"
@@ -9,7 +9,8 @@
   "scripts": {
     "xo": "xo src/*",
     "build": "babel ./src -d ./dist",
-    "prepare": "install-self-peers -- --ignore-scripts"
+    "prepare": "install-self-peers -- --ignore-scripts",
+    "test": "echo \"Warning: no tests specified\" && exit 0"
   },
   "author": "tony kerz",
   "license": "ISC",
