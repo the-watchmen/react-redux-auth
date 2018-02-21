@@ -1,6 +1,6 @@
 {
   "name": "@watchmen/react-redux-auth",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "",
   "publishConfig": {
     "access": "public"
@@ -17,12 +17,14 @@
     "@watchmen/helpr": "2.3.1",
     "config": "1.29.4",
     "debug": "3.1.0",
+    "eventemitter3": "^3.0.1",
     "jwt-decode": "2.2.0",
     "lodash": "4.17.5",
     "minimatch": "3.0.4",
     "prop-types": "15.6.0",
     "redux-actions": "2.2.1",
-    "redux-pack": "0.1.5"
+    "redux-pack": "0.1.5",
+    "tricks": "^1.7.3"
   },
   "peerDependencies": {
     "react": "^15.6.1",
