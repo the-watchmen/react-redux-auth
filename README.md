@@ -32,7 +32,7 @@ authentication and authorization for react, redux and react-router 4.x
       1. [node-oidc-provider](https://github.com/panva/node-oidc-provider): [example](example/auth-config.hello.oidc.js)
       1. [keycloak](http://www.keycloak.org/): [example](example/auth-config.hello.keycloak.js)
          1. [configuration notes](keycloak.md)
-   1. [proxy]()
+   1. [proxy](example/auth-config.proxy.js)
 
 ## development
 

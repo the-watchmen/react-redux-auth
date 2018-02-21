@@ -28,11 +28,11 @@ export default function({postAuthLocation, impl, onLogin, onLogout, onFailure}) 
       // allow passing token here for server-side-proxy case...
       login: ({history, target, token}) => {
         dbg('login-action: history=%o, target=%o, token=%o', history, target, token)
-        return dispatch => {
+        return (dispatch, getState) => {
           dbg('login-action-thunk: dispatch=%o', dispatch)
           dispatch({
             type: LOGIN,
-            promise: impl.login({token}),
+            promise: impl.login({token, getState}),
             meta: {
               onSuccess: result => {
                 dbg('login: on-success: result=%o', result)

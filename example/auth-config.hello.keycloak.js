@@ -1,14 +1,14 @@
 import debug from 'debug'
-import config from 'config'
 import {configure} from '@watchmen/react-redux-auth'
 import getAuth from '@watchmen/react-redux-auth/src/get-auth-hello'
 import getProvider from '@watchmen/react-redux-auth/src/hello/keycloak'
+import config from 'config'
 import {webHelpr} from '@watchmen/web-helpr'
-import {openSnackbar} from './layout/layout-redux'
+import {open as openSnackbar} from './layout/snackbar/redux'
 
 const dbg = debug('app:auth-config')
 
-configure({
+const auth = configure({
   impl: getAuth({
     url: config.auth.url,
     domain: 'realm-1',
@@ -28,21 +28,25 @@ configure({
       path: '/such',
       roles: ['group-1']
     },
-    {path: '/nonsense', roles: 'group-1'}
+    {path: '/nonsense', roles: 'group-1'},
+    {path: '/people', roles: 'superuser'}
   ],
   postAuthLocation: ({token}) => {
     // can customize with function (e.g. based on roles)
     dbg('post-auth-location: token=%o', token)
-    return 'stuff'
+    return '/'
   },
   notAuthorizedLocation: '/',
   onFailure: ({message, dispatch}) => dispatch(openSnackbar(message)),
   onLogin: ({result, dispatch}) => {
-    dbg('on-login: result=%o, dispatch=%o', result, dispatch)
+    dbg('on-login: result=%o, dispatch=%o, domains=%o', result, dispatch)
     webHelpr.setToken(result.encoded)
-  },
-  onLogout: ({dispatch}) => {
-    dbg('on-logout: dispatch=%o', dispatch)
-    webHelpr.unsetToken()
+    dispatch(auth.actions.setRoles(getRoles({token: result.decoded})))
   }
 })
+
+async function getRoles({token}) {
+  // do some stuff with await
+  dbg('get-roles: token=%o', token)
+  return ['group-1', 'superuser']
+}
